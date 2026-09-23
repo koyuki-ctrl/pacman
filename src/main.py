@@ -54,7 +54,7 @@ class App:
                 if action == "menu":
                     self.scene_status = SceneModel.MENU.value
             elif self.scene_status == SceneModel.GAME.value:
-                self.game_scene.draw()
+                self.game_scene.draw(self.w, self.h)
             elif self.scene_status == SceneModel.COMMAND.value:
                 action = self.command_scene.draw()
                 if action == "menu":
