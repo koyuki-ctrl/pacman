@@ -38,7 +38,7 @@ class Utils:
         w = base_btn.width * scale
         h = base_btn.height * scale
 
-        mx, my = Utils().get_mouse_position()
+        mx, my = self.get_mouse_position()
         hover = (x <= mx <= x + w) and (y <= my <= y + h)
 
         if hover:

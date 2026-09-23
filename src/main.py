@@ -67,7 +67,7 @@ class App:
         elif action == "command":
             ControlScene().cleanup()
         elif action == "score":
-            pass
+            HighScoreScene().cleanup()
 
         close_window()
 

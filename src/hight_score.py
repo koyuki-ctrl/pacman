@@ -14,10 +14,12 @@ class HighScoreScene:
         self.return_btn_hover = load_texture(
             "assets/return-game-button-hovered.png"
         )
+        self.menu = load_texture("assets/high_Score_board.png")
         self.utils = Utils()
 
     def draw(self):
         draw_texture_ex(self.bg, (0, 0), 0.0, 0.95, WHITE)
+        draw_texture_ex(self.menu, (0, 0), 0.0, 1, WHITE)
         if self.utils.draw_button_image(
             self.return_btn, self.return_btn_hover,
             (10, 10), 0.0, 0.3, WHITE

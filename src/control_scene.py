@@ -15,9 +15,11 @@ class ControlScene:
             "assets/return-game-button-hovered.png"
         )
         self.utils = Utils()
+        self.menu = load_texture("assets/game_control.png")
 
     def draw(self):
         draw_texture_ex(self.bg, (0, 0), 0.0, 0.95, WHITE)
+        draw_texture_ex(self.menu, (150, 80), 0.0, 1, WHITE)
         if self.utils.draw_button_image(
             self.return_btn, self.return_btn_hover,
             (10, 10), 0.0, 0.3, WHITE
