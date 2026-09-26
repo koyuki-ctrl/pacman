@@ -106,3 +106,8 @@ class Utils:
     ) -> None:
         for t in range(thick):
             self.vline(x + t, y, length, color)
+
+    def draw_rect(
+            self, x: int, y: int, width: int, height: int, color
+    ) -> None:
+        self.thick_hline(x, y, width, height, color)

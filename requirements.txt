@@ -3,7 +3,8 @@ ast_serialize==0.11.2
 cffi==2.1.1
 flake8==7.3.0
 librt==0.15.0
-mazegenerator @ file:///home/ainradan/commoncore/Pacman/mazegenerator-00001/mazegenerator-2.1.0-py3-none-any.whl#sha256=98e12f7e989cef03dd4411657d7bee12653804aee87a568eddfaf21436ffd4aa
+# mazegenerator @ file:///home/ainradan/commoncore/Pacman/mazegenerator-00001/mazegenerator-2.1.0-py3-none-any.whl#sha256=98e12f7e989cef03dd4411657d7bee12653804aee87a568eddfaf21436ffd4aa
+./mazegenerator-00001/mazegenerator-2.1.0-py3-none-any.whl
 mccabe==0.7.0
 MouseInfo==0.1.3
 mypy==2.3.1

@@ -83,8 +83,57 @@ class Maze:
                         cell_w, thick, color,
                     )
 
+                # if m & self.east:
+                #     self.utils.thick_vline(
+                #         x0 + cell_w - thick, y0,
+                #         cell_h, thick, color,
+                #     )
                 if m & self.east:
-                    self.utils.thick_vline(
-                        x0 + cell_w - thick, y0,
-                        cell_h, thick, color,
+                    if y == 0:
+                        self.utils.thick_vline(
+                            x0 + cell_w - thick, y0,
+                            cell_h, thick, color
+                        )
+                    else:
+                        self.utils.thick_vline(
+                            x0 + cell_w - thick, y0 - thick,
+                            cell_h + thick, thick, color,
+                        )
+
+    def draw_background(
+        self,
+        maze: MazeGenerator,
+        cell_w: int, cell_h: int,
+        offset_x: int, offset_y: int,
+        color,
+    ) -> None:
+        grid = maze.maze
+        cell = min(cell_w, cell_h)
+        rows = len(grid)
+        cols = len(grid[0]) if rows else 0
+        self.utils.draw_rect(
+            offset_x, offset_y, cols * cell, rows * cell, color
+            )
+
+    def draw_42(
+        self,
+        maze: MazeGenerator,
+        cell_w: int, cell_h: int,
+        offset_x: int, offset_y: int,
+        color
+    ) -> None:
+        grid = maze.maze
+        cell = min(cell_w, cell_h)
+        rows = len(grid)
+        cols = len(grid[0]) if rows else 0
+
+        for y in range(rows):
+            for x in range(cols):
+                m = grid[y][x]
+                if m == 15:
+                    self.utils.draw_rect(
+                        offset_x + x * cell,
+                        offset_y + y * cell,
+                        cell, cell,
+                        color
                     )
