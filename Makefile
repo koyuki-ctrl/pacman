@@ -4,22 +4,32 @@ VENV_DIR = .venv
 VENV_PYTHON = $(VENV_DIR)/bin/python
 VENV_PIP = $(VENV_DIR)/bin/pip
 
-$(VENV_DIR): $(REQUIREMENTS)
+$(VENV_DIR)/.installed: $(REQUIREMENTS)
 	python$(PYTHON_VERSION) -m venv $(VENV_DIR)
 	$(VENV_PIP) install --upgrade pip
 	$(VENV_PIP) install -r $(REQUIREMENTS)
+	touch $(VENV_DIR)/.installed
 
-install: $(VENV_DIR)
+install: $(VENV_DIR)/.installed
 
 run: install
-	$(VENV_PYTHON) src/main.py
+	XAUTHORITY=/dev/null $(VENV_PYTHON) src/main.py
+# 	$(VENV_PYTHON) src/main.py
 
 debug: install
-	$(VENV_PYTHON) -m pdb src/main.py
-clean:
-	rm -rf $(VENV_DIR) __pycache__ *.pyc .mypy_cache .pytest_cache
+	XAUTHORITY=/dev/null $(VENV_PYTHON) -m pdb src/main.py
+# 	$(VENV_PYTHON) -m pdb src/main.py
 
-re: clean $(VENV_DIR)
+clean:
+	find . -type d -name "__pycache__" -exec rm -rf {} +
+	find . -type d -name "*.pyc" -exec rm -rf {} +
+	find . -type d -name ".mypy_cache" -exec rm -rf {} +
+	find . -type d -name ".pytest_cache" -exec rm -rf {} +
+
+fclean: clean
+	rm -rf $(VENV_DIR)
+
+re: fclean install
 
 lint: install
 	$(VENV_PYTHON) -m flake8 --exclude=.venv,__pycache__,.mypy_cache
@@ -32,4 +42,4 @@ lint-strict: install
 freeze:
 	$(VENV_PYTHON) -m pip freeze > $(REQUIREMENTS)
 
-.PHONY: install run debug clean lint lint-strict freeze re
+.PHONY: install run debug clean fclean re lint lint-strict freeze re

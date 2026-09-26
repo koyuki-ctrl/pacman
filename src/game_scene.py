@@ -3,7 +3,7 @@ from pyray import (
     unload_texture,
     draw_texture_ex,
 )
-from colors import WHITE
+from colors import WHITE, BLACK_TRANSPARENT, DARKBLUE
 from maze import Maze
 
 
@@ -52,6 +52,24 @@ class GameScene:
         draw_texture_ex(self.bg_color, (0, 0), 0.0, 1, WHITE)
 
         self._ensure_layout(screen_w, screen_h)
+
+        self.maze.draw_background(
+            self.maze_obj,
+            self.cell_w,
+            self.cell_h,
+            self.offset_x,
+            self.offset_y,
+            BLACK_TRANSPARENT
+        )
+
+        self.maze.draw_42(
+            self.maze_obj,
+            self.cell_w,
+            self.cell_h,
+            self.offset_x,
+            self.offset_y,
+            DARKBLUE
+        )
 
         self.maze.draw_maze(
             self.maze_obj,
