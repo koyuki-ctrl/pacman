@@ -5,6 +5,7 @@ from pyray import (
 )
 from colors import WHITE
 from maze import Maze
+from parsing import GameConfigFile
 
 
 class GameScene:
@@ -27,6 +28,7 @@ class GameScene:
         self.offset_x = 0
         self.offset_y = 0
         self._layout_ready = False
+        self.json_config_file = GameConfigFile.from_json()
 
     def _ensure_layout(self, screen_w: int, screen_h: int) -> None:
         if self._layout_ready:
@@ -65,3 +67,10 @@ class GameScene:
 
     def cleanup(self) -> None:
         unload_texture(self.bg)
+        unload_texture(self.bg_color)
+
+    def pause_game(self):
+        pass
+
+    def over_game(self):
+        pass

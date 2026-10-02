@@ -3,6 +3,7 @@ REQUIREMENTS = requirements.txt
 VENV_DIR = .venv
 VENV_PYTHON = $(VENV_DIR)/bin/python
 VENV_PIP = $(VENV_DIR)/bin/pip
+ARG = config.json
 
 $(VENV_DIR): $(REQUIREMENTS)
 	python$(PYTHON_VERSION) -m venv $(VENV_DIR)
@@ -12,10 +13,10 @@ $(VENV_DIR): $(REQUIREMENTS)
 install: $(VENV_DIR)
 
 run: install
-	$(VENV_PYTHON) src/main.py
+	$(VENV_PYTHON) src/main.py $(ARG)
 
 debug: install
-	$(VENV_PYTHON) -m pdb src/main.py
+	$(VENV_PYTHON) -m pdb src/main.py $(ARG)
 clean:
 	rm -rf $(VENV_DIR) __pycache__ *.pyc .mypy_cache .pytest_cache
 
