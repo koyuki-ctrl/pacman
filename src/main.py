@@ -4,7 +4,7 @@ from pyray import (
     begin_drawing,
     end_drawing,
     close_window,
-    clear_background
+    clear_background,
 )
 from colors import BLACK
 from utils import SceneModel
@@ -32,13 +32,18 @@ class App:
         self.menu_scene = MenuScene()
 
     def run(self) -> None:
+        action = None
+
         while not window_should_close():
             clear_background(BLACK)
             begin_drawing()
+
+            # -------- MENU --------
             if self.scene_status == SceneModel.MENU.value:
                 action = self.menu_scene.draw()
+
                 if action == "game":
-                    self.game_scene = GameScene()
+                    self.game_scene = GameScene(w=self.w, h=self.h)
                     self.scene_status = SceneModel.GAME.value
                 elif action == "command":
                     self.command_scene = ControlScene()
@@ -49,25 +54,44 @@ class App:
                 elif action == "quit":
                     break
 
+            # -------- HIGHSCORE --------
             elif self.scene_status == SceneModel.HIGHSCORE.value:
                 action = self.high_score_scene.draw()
                 if action == "menu":
+                    self.high_score_scene.cleanup()
+                    self.high_score_scene = None
                     self.scene_status = SceneModel.MENU.value
+
+            # -------- GAME --------
             elif self.scene_status == SceneModel.GAME.value:
-                self.game_scene.draw(self.w, self.h)
+                action = self.game_scene.draw(self.w, self.h)
+
+                if action == "menu":
+                    self.game_scene.cleanup()
+                    self.game_scene = None
+                    self.scene_status = SceneModel.MENU.value
+
+                elif action == "game":
+                    self.game_scene.cleanup()
+                    self.game_scene = GameScene(w=self.w, h=self.h)
+
             elif self.scene_status == SceneModel.COMMAND.value:
                 action = self.command_scene.draw()
                 if action == "menu":
+                    self.command_scene.cleanup()
+                    self.command_scene = None
                     self.scene_status = SceneModel.MENU.value
 
             end_drawing()
 
-        if action == "game":
-            GameScene().cleanup()
-        elif action == "command":
-            ControlScene().cleanup()
-        elif action == "score":
-            HighScoreScene().cleanup()
+        if self.game_scene is not None:
+            self.game_scene.cleanup()
+        if self.command_scene is not None:
+            self.command_scene.cleanup()
+        if self.high_score_scene is not None:
+            self.high_score_scene.cleanup()
+        if self.menu_scene is not None:
+            self.menu_scene.cleanup()
 
         close_window()
 

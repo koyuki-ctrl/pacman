@@ -1,11 +1,11 @@
 # Configuration du jeu Pacman
 {
-    // vies de départ
+    // test
     "lives": 3,
 
-    "pacgum": 10,
+    "pacgum": 300,
 
-    /* temps max par niveau en secondes */
+    /* */
     "level_max_time": 120,
 
     "points_per_pacgum": 10,

@@ -37,25 +37,25 @@ class MenuScene:
 
         if self.utils.draw_button_image(
             self.start_btn, self.start_btn_hover,
-            (500, 300), 0.0, 0.7, WHITE
+            (500, 300), 0.0, 0.7, WHITE, 10
         ):
             return "game"
 
         elif self.utils.draw_button_image(
             self.command_btn, self.command_btn_hover,
-            (500, 380), 0.0, 0.7, WHITE
+            (500, 380), 0.0, 0.7, WHITE, 10
         ):
             return "command"
 
         elif self.utils.draw_button_image(
             self.high_score_btn, self.high_score_btn_hover,
-            (500, 460), 0.0, 0.7, WHITE
+            (500, 460), 0.0, 0.7, WHITE, 10
         ):
             return "score"
 
         elif self.utils.draw_button_image(
             self.quit_btn, self.quit_btn_hover,
-            (500, 550), 0.0, 0.7, WHITE
+            (500, 550), 0.0, 0.7, WHITE, 10
         ):
             return "quit"
         else:
