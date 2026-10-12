@@ -3,12 +3,15 @@ from pyray import (
     unload_texture,
     draw_texture_ex,
     is_key_pressed,
+    get_frame_time,
+    draw_text,
     KeyboardKey
 )
-from colors import WHITE
+from colors import WHITE, YELLOW
 from maze import Maze
 from parsing import GameConfigFile
 from pacgum import PacgumManager
+from pacman import Pacman
 from utils import Utils
 
 
@@ -55,6 +58,12 @@ class GameScene:
         self.counter = 0
         self.utils = Utils()
 
+        # --- Pacman + score ---
+        self.score = 0
+        self.pacman = Pacman(self.maze_obj.maze, YELLOW)
+        # mange la pacgum de la case de départ
+        self.pacgum_manager.eat(*self.pacman.cell)
+
     def _ensure_layout(self, screen_w: int, screen_h: int) -> None:
         if self._layout_ready:
             return
@@ -73,6 +82,23 @@ class GameScene:
         self.offset_y = (screen_h - maze_px_h) // 2
 
         self._layout_ready = True
+
+    def _update_pacman(self) -> None:
+        self.pacman.update(get_frame_time())
+
+        if not self.pacman.arrived:
+            return
+
+        gum = self.pacgum_manager.eat(*self.pacman.cell)
+        if gum is not None:
+            if gum.super_pacgum:
+                self.score += self.json_config_file.points_per_super_pacgum
+                # TODO : activer le mode "fantômes effrayés"
+            else:
+                self.score += self.json_config_file.points_per_pacgum
+
+        if self.pacgum_manager.remaining() == 0:
+            pass  # TODO : niveau terminé
 
     def draw(self, screen_w: int, screen_h: int) -> None | str:
         draw_texture_ex(self.bg, (0, 0), 0.0, 0.95, WHITE)
@@ -95,6 +121,7 @@ class GameScene:
             self.offset_x, self.offset_y,
             color=WHITE,
         )
+
         if is_key_pressed(KeyboardKey.KEY_SPACE):
             if self.is_first:
                 self.ready = False
@@ -102,6 +129,13 @@ class GameScene:
             if not self.is_first or self.counter == 1:
                 self.paused = not self.paused
             self.counter = 1
+
+        if not self.ready and not self.paused:
+            self._update_pacman()
+
+        self.pacman.draw(
+            self.cell_w, self.cell_h, self.offset_x, self.offset_y)
+        draw_text(f"SCORE {self.score}", 20, 20, 24, WHITE)
 
         if self.ready:
             draw_texture_ex(

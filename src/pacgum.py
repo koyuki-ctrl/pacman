@@ -20,16 +20,23 @@ class Pacgum:
     def draw(self, cell_w, cell_h, offset_x, offset_y, color) -> None:
         cx = offset_x + self.cell_x * cell_w + cell_w // 2
         cy = offset_y + self.cell_y * cell_h + cell_h // 2
-        radius = max(3, cell_w // 5) if self.super_pacgum else max(1, cell_w // 10)
+        if self.super_pacgum:
+            radius = max(3, cell_w // 5)
+        else:
+            radius = max(1, cell_w // 10)
         draw_circle(cx, cy, radius, color)
 
 
 class PacgumManager:
-    def __init__(self, grid: list[list[int]], nb_pacgum: int, seed: int | None = None):
+    def __init__(
+        self, grid: list[list[int]], nb_pacgum: int, seed: int | None = None
+    ):
         self.pacgums: list[Pacgum] = []
         if seed is not None:
             random.seed(seed)
         self._place(grid, nb_pacgum)
+        # accès rapide par cellule pour la collision
+        self.by_cell = {(p.cell_x, p.cell_y): p for p in self.pacgums}
 
     @staticmethod
     def _is_walkable(grid, x: int, y: int) -> bool:
@@ -40,7 +47,7 @@ class PacgumManager:
         rows = len(grid)
         cols = len(grid[0]) if rows else 0
 
-        # 4 super pacgums aux coins … mais seulement si la cellule est praticable
+        # 4 super pacgums aux coins (si la cellule est praticable)
         corners = [(0, 0), (cols - 1, 0), (0, rows - 1), (cols - 1, rows - 1)]
         corner_set = {
             (x, y) for (x, y) in corners
@@ -49,7 +56,7 @@ class PacgumManager:
         for (x, y) in corner_set:
             self.pacgums.append(Pacgum(x, y, super_pacgum=True))
 
-        # Candidats : cellule praticable ET pas déjà utilisée par un super pacgum
+        # Candidats : praticable ET pas déjà un super pacgum
         candidates = [
             (x, y)
             for y in range(rows)
@@ -60,6 +67,17 @@ class PacgumManager:
         n = min(nb_pacgum, len(candidates))
         for (x, y) in random.sample(candidates, n):
             self.pacgums.append(Pacgum(x, y))
+
+    def eat(self, cell_x: int, cell_y: int) -> Pacgum | None:
+        """Mange la pacgum de la cellule (si elle existe) et la renvoie."""
+        p = self.by_cell.get((cell_x, cell_y))
+        if p is not None and not p.eaten:
+            p.eaten = True
+            return p
+        return None
+
+    def remaining(self) -> int:
+        return sum(1 for p in self.pacgums if not p.eaten)
 
     def draw(self, cell_w, cell_h, offset_x, offset_y, color) -> None:
         for p in self.pacgums:
